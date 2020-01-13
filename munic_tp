@@ -1,0 +1,27 @@
+library(readxl)
+library(dplyr)
+
+setwd('/Users/mackook/downloads⁩/') #Alterar o caminho para a pasta onde deseja salvar os arquivos
+
+#ler base de dados MUNIC2017
+munic <- read_xls('/Users/mackook/Downloads/Base MUNIC 2017.xls', sheet=6) %>% 
+  mutate(cod_muni = as.numeric(munic$CodMun...1))
+
+#filtrar dados relevantes paar
+munic_capitais <- munic %>% 
+  filter(cod_muni %in% c(2927408, 3304557, 2611606, 2304400, 5300108, 4106902,
+                                   3106200, 1501402, 1100205, 1200401, 1302603, 1400100, 
+                                   1600303, 1721000, 2111300, 2211001, 2408102, 2507507, 
+                                   2704302, 2800308, 3205309, 4205407, 4314902, 5002704,
+                                   5103403, 5208707, 3550308)) %>%
+  select('cod_muni', 'MTRA19', 'MTRA1911', 'MTRA192', 'MTRA1912',
+         'MTRA193', 'MTRA1913', 'MTRA1914', 'MTRA1915') %>%
+  rename(TC_intramuni = 'MTRA19', Conc = 'MTRA1911', Conc_lic = 'MTRA192', 
+         Perm = 'MTRA1912', Perm_lic = 'MTRA193', Auto = 'MTRA1913', 
+         Pref = 'MTRA1914', Nreg = 'MTRA1915')
+
+#salvar
+write.xlsx (munic_capitais, './dados/IBGE/munic_2017/regulamentacao_transp_coletivo_intramuni.xlsx')
+
+head(munic_capitais, 27)
+
